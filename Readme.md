@@ -3,6 +3,12 @@
 
   Tiny C string manipulation library.
 
+## Installation
+
+```
+$ cpm install visionmedia/buffer.c
+```
+
 ## API
 
 ```c
