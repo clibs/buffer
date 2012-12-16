@@ -35,6 +35,9 @@ buffer_equals(buffer_t *self, buffer_t *other);
 
 buffer_t *
 buffer_slice(buffer_t *self, size_t from, ssize_t to);
+
+size_t
+buffer_indexof(buffer_t *self, char *str);
 ```
 
 ## License

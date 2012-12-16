@@ -119,6 +119,20 @@ test_buffer_equals() {
   assert(0 == buffer_equals(a, b));
 }
 
+void
+test_buffer_indexof() {
+  buffer_t *buf = buffer_new_with_string("Tobi is a ferret");
+
+  ssize_t i = buffer_indexof(buf, "is");
+  assert(5 == i);
+
+  i = buffer_indexof(buf, "a");
+  assert(8 == i);
+
+  i = buffer_indexof(buf, "something");
+  assert(-1 == i);
+}
+
 int
 main(){
   test_buffer_new();
@@ -131,6 +145,7 @@ main(){
   test_buffer_slice__end();
   test_buffer_slice__end_overflow();
   test_buffer_equals();
+  test_buffer_indexof();
   printf("\n  \e[32m\u2713 \e[90mok\e[0m\n\n");
   return 0;
 }

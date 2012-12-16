@@ -54,6 +54,9 @@ buffer_append(buffer_t *self, char *str);
 int
 buffer_equals(buffer_t *self, buffer_t *other);
 
+ssize_t
+buffer_indexof(buffer_t *self, char *str);
+
 buffer_t *
 buffer_slice(buffer_t *self, size_t from, ssize_t to);
 

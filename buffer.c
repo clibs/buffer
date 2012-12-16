@@ -175,3 +175,14 @@ buffer_equals(buffer_t *self, buffer_t *other) {
   return 0 == strcmp(self->data, other->data);
 }
 
+/*
+ * Return the index of the substring `str`, or -1 on failure.
+ */
+
+ssize_t
+buffer_indexof(buffer_t *self, char *str) {
+  char *sub = strstr(self->data, str);
+  if (!sub) return -1;
+  return sub - self->data;
+}
+
