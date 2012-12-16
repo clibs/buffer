@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include "buffer.h"
 
+// TODO: linked list for append/prepend etc
+
 /*
  * Compute the nearest multiple of `a` from `b`.
  */
