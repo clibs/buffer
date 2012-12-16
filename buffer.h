@@ -37,6 +37,9 @@ buffer_t *
 buffer_new_with_string(char *str);
 
 buffer_t *
+buffer_new_with_string_length(char *str, size_t len);
+
+buffer_t *
 buffer_new_with_copy(char *str);
 
 size_t

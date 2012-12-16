@@ -46,9 +46,18 @@ buffer_new_with_size(size_t n) {
 
 buffer_t *
 buffer_new_with_string(char *str) {
+  return buffer_new_with_string_length(str, strlen(str));
+}
+
+/*
+ * Allocate a new buffer with `str` and `len`.
+ */
+
+buffer_t *
+buffer_new_with_string_length(char *str, size_t len) {
   buffer_t *self = malloc(sizeof(buffer_t));
   if (!self) return NULL;
-  self->len = strlen(str);
+  self->len = len;
   self->data = str;
   return self;
 }
