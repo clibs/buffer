@@ -80,14 +80,14 @@ test_buffer_slice() {
 
 void
 test_buffer_slice__range_error() {
-  buffer_t *buf = buffer_new_with_string("Tobi Ferret");
+  buffer_t *buf = buffer_new_with_copy("Tobi Ferret");
   buffer_t *a = buffer_slice(buf, 10, 2);
   assert(NULL == a);
 }
 
 void
 test_buffer_slice__end() {
-  buffer_t *buf = buffer_new_with_string("Tobi Ferret");
+  buffer_t *buf = buffer_new_with_copy("Tobi Ferret");
 
   buffer_t *a = buffer_slice(buf, 5, -1);
   equal("Tobi Ferret", buffer_string(buf));
@@ -102,7 +102,7 @@ test_buffer_slice__end() {
 
 void
 test_buffer_slice__end_overflow() {
-  buffer_t *buf = buffer_new_with_string("Tobi Ferret");
+  buffer_t *buf = buffer_new_with_copy("Tobi Ferret");
   buffer_t *a = buffer_slice(buf, 5, 1000);
   equal("Tobi Ferret", buffer_string(buf));
   equal("Ferret", buffer_string(a));
@@ -110,8 +110,8 @@ test_buffer_slice__end_overflow() {
 
 void
 test_buffer_equals() {
-  buffer_t *a = buffer_new_with_string("Hello");
-  buffer_t *b = buffer_new_with_string("Hello");
+  buffer_t *a = buffer_new_with_copy("Hello");
+  buffer_t *b = buffer_new_with_copy("Hello");
 
   assert(1 == buffer_equals(a, b));
 
@@ -121,7 +121,7 @@ test_buffer_equals() {
 
 void
 test_buffer_indexof() {
-  buffer_t *buf = buffer_new_with_string("Tobi is a ferret");
+  buffer_t *buf = buffer_new_with_copy("Tobi is a ferret");
 
   ssize_t i = buffer_indexof(buf, "is");
   assert(5 == i);
