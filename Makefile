@@ -1,6 +1,18 @@
+CFLAGS=-std=c99
 
-test: buffer.c test.c
-	@$(CC) $^ -std=c99 -o $@
+SRC=buffer.c
+OBJ=$(patsubst %.c,%.o,$(SRC))
+
+.PHONY: clean
+
+all: test
+
+build: $(OBJ)
+
+test: build
+	$(CC) $(CFLAGS) $@.c $(OBJ) -o $@
 	@./test
 
-.PHONY: test
+clean:
+	find . -type f -executable -exec rm -f {} \;
+	rm -f *.o
