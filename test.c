@@ -142,6 +142,15 @@ test_buffer_fill() {
   assert(0 == buffer_length(buf));
 }
 
+void
+test_buffer_clear() {
+  buffer_t *buf = buffer_new_with_copy("Hello");
+  assert(5 == buffer_length(buf));
+
+  buffer_clear(buf);
+  assert(0 == buffer_length(buf));
+}
+
 int
 main(){
   test_buffer_new();
@@ -156,6 +165,7 @@ main(){
   test_buffer_equals();
   test_buffer_indexof();
   test_buffer_fill();
+  test_buffer_clear();
   printf("\n  \e[32m\u2713 \e[90mok\e[0m\n\n");
   return 0;
 }

@@ -216,3 +216,12 @@ void
 buffer_fill(buffer_t *self, int c) {
   memset(self->data, c, self->len);
 }
+
+/*
+ * Fill the buffer with 0.
+ */
+
+void
+buffer_clear(buffer_t *self) {
+  buffer_fill(self, 0);
+}

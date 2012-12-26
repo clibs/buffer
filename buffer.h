@@ -69,6 +69,9 @@ buffer_slice(buffer_t *self, size_t from, ssize_t to);
 void
 buffer_fill(buffer_t *self, int c);
 
+void
+buffer_clear(buffer_t *self);
+
 #define buffer_string(self) (self->data)
 
 #endif
