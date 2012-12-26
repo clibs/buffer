@@ -22,6 +22,7 @@
 
 typedef struct {
   size_t len;
+  char *alloc;
   char *data;
 } buffer_t;
 
@@ -71,6 +72,15 @@ buffer_fill(buffer_t *self, int c);
 
 void
 buffer_clear(buffer_t *self);
+
+void
+buffer_trim_left(buffer_t *self);
+
+void
+buffer_trim_right(buffer_t *self);
+
+void
+buffer_trim(buffer_t *self);
 
 #define buffer_string(self) (self->data)
 

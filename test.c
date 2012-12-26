@@ -151,6 +151,21 @@ test_buffer_clear() {
   assert(0 == buffer_length(buf));
 }
 
+void
+test_buffer_trim() {
+  buffer_t *buf = buffer_new_with_copy("  Hello\n\n ");
+  buffer_trim(buf);
+  equal("Hello", buffer_string(buf));
+
+  buf = buffer_new_with_copy("  Hello\n\n ");
+  buffer_trim_left(buf);
+  equal("Hello\n\n ", buffer_string(buf));
+
+  buf = buffer_new_with_copy("  Hello\n\n ");
+  buffer_trim_right(buf);
+  equal("  Hello", buffer_string(buf));
+}
+
 int
 main(){
   test_buffer_new();
@@ -166,6 +181,7 @@ main(){
   test_buffer_indexof();
   test_buffer_fill();
   test_buffer_clear();
+  test_buffer_trim();
   printf("\n  \e[32m\u2713 \e[90mok\e[0m\n\n");
   return 0;
 }

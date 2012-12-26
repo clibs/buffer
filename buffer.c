@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "buffer.h"
 
 // TODO: shared with reference counting
@@ -37,7 +38,7 @@ buffer_new_with_size(size_t n) {
   buffer_t *self = malloc(sizeof(buffer_t));
   if (!self) return NULL;
   self->len = n;
-  self->data = calloc(n, 1);
+  self->data = self->alloc = calloc(n, 1);
   return self;
 }
 
@@ -59,7 +60,7 @@ buffer_new_with_string_length(char *str, size_t len) {
   buffer_t *self = malloc(sizeof(buffer_t));
   if (!self) return NULL;
   self->len = len;
-  self->data = str;
+  self->data = self->alloc = str;
   return self;
 }
 
@@ -72,7 +73,8 @@ buffer_new_with_copy(char *str) {
   size_t len = strlen(str);
   buffer_t *self = buffer_new_with_size(len);
   if (!self) return NULL;
-  memcpy(self->data, str, len);
+  memcpy(self->alloc, str, len);
+  self->data = self->alloc;
   return self;
 }
 
@@ -82,7 +84,7 @@ buffer_new_with_copy(char *str) {
 
 void
 buffer_free(buffer_t *self) {
-  free(self->data);
+  free(self->alloc);
   free(self);
 }
 
@@ -112,8 +114,8 @@ int
 buffer_resize(buffer_t *self, size_t n) {
   n = nearest_multiple_of(1024, n);
   self->len = n;
-  self->data = realloc(self->data, n);
-  return self->data ? 0 : -1;
+  self->alloc = self->data = realloc(self->alloc, n);
+  return self->alloc ? 0 : -1;
 }
 
 /*
@@ -207,6 +209,41 @@ buffer_indexof(buffer_t *self, char *str) {
   char *sub = strstr(self->data, str);
   if (!sub) return -1;
   return sub - self->data;
+}
+
+/*
+ * Trim leading whitespace.
+ */
+
+void
+buffer_trim_left(buffer_t *self) {
+  int c;
+  while ((c = *self->data) && isspace(c)) {
+    ++self->data;
+  }
+}
+
+/*
+ * Trim trailing whitespace.
+ */
+
+void
+buffer_trim_right(buffer_t *self) {
+  size_t i = buffer_length(self) - 1;
+  int c;
+  while ((c = self->data[i]) && isspace(c)) {
+    self->data[i--] = 0;
+  }
+}
+
+/*
+ * Trim trailing and leading whitespace.
+ */
+
+void
+buffer_trim(buffer_t *self) {
+  buffer_trim_left(self);
+  buffer_trim_right(self);
 }
 
 /*
