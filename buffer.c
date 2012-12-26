@@ -247,8 +247,8 @@ buffer_trim_left(buffer_t *self) {
 
 void
 buffer_trim_right(buffer_t *self) {
-  size_t i = buffer_length(self) - 1;
   int c;
+  size_t i = buffer_length(self) - 1;
   while ((c = self->data[i]) && isspace(c)) {
     self->data[i--] = 0;
   }
