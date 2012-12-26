@@ -79,6 +79,23 @@ buffer_new_with_copy(char *str) {
 }
 
 /*
+ * Deallocate excess memory, returning -1 on
+ * failure, 0 on success.
+ */
+
+int
+buffer_compact(buffer_t *self) {
+  size_t len = buffer_length(self);
+  char *buf = calloc(len, 1);
+  if (!buf) return -1;
+  memcpy(buf, self->data, len);
+  free(self->alloc);
+  self->len = len;
+  self->data = self->alloc = buf;
+  return 0;
+}
+
+/*
  * Free the buffer.
  */
 

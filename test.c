@@ -166,6 +166,19 @@ test_buffer_trim() {
   equal("  Hello", buffer_string(buf));
 }
 
+void
+test_buffer_compact() {
+  buffer_t *buf = buffer_new_with_copy("  Hello\n\n ");
+  buffer_trim(buf);
+  assert(5 == buffer_length(buf));
+  assert(10 == buffer_size(buf));
+
+  buffer_compact(buf);
+  assert(5 == buffer_length(buf));
+  assert(5 == buffer_size(buf));
+  equal("Hello", buffer_string(buf));
+}
+
 int
 main(){
   test_buffer_new();
@@ -182,6 +195,7 @@ main(){
   test_buffer_fill();
   test_buffer_clear();
   test_buffer_trim();
+  test_buffer_compact();
   printf("\n  \e[32m\u2713 \e[90mok\e[0m\n\n");
   return 0;
 }

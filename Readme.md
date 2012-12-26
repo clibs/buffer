@@ -51,6 +51,9 @@ buffer_indexof(buffer_t *self, char *str);
 buffer_t *
 buffer_slice(buffer_t *self, size_t from, ssize_t to);
 
+int
+buffer_compact(buffer_t *self);
+
 void
 buffer_fill(buffer_t *self, int c);
 
