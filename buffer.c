@@ -208,3 +208,11 @@ buffer_indexof(buffer_t *self, char *str) {
   return sub - self->data;
 }
 
+/*
+ * Fill the buffer with `c`.
+ */
+
+void
+buffer_fill(buffer_t *self, int c) {
+  memset(self->data, c, self->len);
+}

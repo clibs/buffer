@@ -47,6 +47,9 @@ buffer_slice(buffer_t *self, size_t from, ssize_t to);
 
 size_t
 buffer_indexof(buffer_t *self, char *str);
+
+void
+buffer_fill(buffer_t *self, int c);
 ```
 
 ## License

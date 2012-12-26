@@ -66,6 +66,9 @@ buffer_indexof(buffer_t *self, char *str);
 buffer_t *
 buffer_slice(buffer_t *self, size_t from, ssize_t to);
 
+void
+buffer_fill(buffer_t *self, int c);
+
 #define buffer_string(self) (self->data)
 
 #endif
