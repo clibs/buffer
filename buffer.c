@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include "buffer.h"
 
+// TODO: shared with reference counting
 // TODO: linked list for append/prepend etc
 
 /*
