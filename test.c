@@ -173,7 +173,8 @@ test_buffer_compact() {
   assert(5 == buffer_length(buf));
   assert(10 == buffer_size(buf));
 
-  buffer_compact(buf);
+  ssize_t removed = buffer_compact(buf);
+  assert(5 == removed);
   assert(5 == buffer_length(buf));
   assert(5 == buffer_size(buf));
   equal("Hello", buffer_string(buf));
