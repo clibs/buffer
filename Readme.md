@@ -69,6 +69,9 @@ buffer_trim_right(buffer_t *self);
 void
 buffer_trim(buffer_t *self);
 
+void
+buffer_print(buffer_t *self);
+
 #define buffer_string(self) (self->data)
 ```
 
