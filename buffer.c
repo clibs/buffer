@@ -134,7 +134,9 @@ buffer_resize(buffer_t *self, size_t n) {
   n = nearest_multiple_of(1024, n);
   self->len = n;
   self->alloc = self->data = realloc(self->alloc, n + 1);
-  return self->alloc ? 0 : -1;
+  if (!self->alloc) return -1;
+  self->alloc[n] = '\0';
+  return 0;
 }
 
 /*
