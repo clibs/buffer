@@ -39,7 +39,7 @@ buffer_new_with_size(size_t n) {
   buffer_t *self = malloc(sizeof(buffer_t));
   if (!self) return NULL;
   self->len = n;
-  self->data = self->alloc = calloc(n, 1);
+  self->data = self->alloc = calloc(n + 1, 1);
   return self;
 }
 
@@ -88,7 +88,7 @@ ssize_t
 buffer_compact(buffer_t *self) {
   size_t len = buffer_length(self);
   size_t rem = self->len - len;
-  char *buf = calloc(len, 1);
+  char *buf = calloc(len + 1, 1);
   if (!buf) return -1;
   memcpy(buf, self->data, len);
   free(self->alloc);
@@ -133,8 +133,10 @@ int
 buffer_resize(buffer_t *self, size_t n) {
   n = nearest_multiple_of(1024, n);
   self->len = n;
-  self->alloc = self->data = realloc(self->alloc, n);
-  return self->alloc ? 0 : -1;
+  self->alloc = self->data = realloc(self->alloc, n + 1);
+  if (!self->alloc) return -1;
+  self->alloc[n] = '\0';
+  return 0;
 }
 
 /*
@@ -205,7 +207,7 @@ buffer_slice(buffer_t *buf, size_t from, ssize_t to) {
   if (to > len) to = len;
 
   size_t n = to - from;
-  buffer_t *self = buffer_new_with_size(n + 1);
+  buffer_t *self = buffer_new_with_size(n);
   memcpy(self->data, buf->data + from, n);
   return self;
 }
