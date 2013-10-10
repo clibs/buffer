@@ -1,7 +1,7 @@
 {
   "name": "buffer",
   "version": "0.2.0",
-  "repo": "visionmedia/buffer.c",
+  "repo": "clibs/buffer",
   "description": "Higher level C-string utilities",
   "keywords": ["buf", "buffer", "string", "str", "util", "utils"],
   "license": "MIT",

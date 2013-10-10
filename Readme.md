@@ -1,12 +1,14 @@
 
-# buffer.c
+# buffer
 
   Tiny C string manipulation library.
 
 ## Installation
 
+  Install with [clib](https://github.com/clibs/clib):
+
 ```
-$ cpm install visionmedia/buffer.c
+$ clib install clibs/buffer
 ```
 
 ## API
