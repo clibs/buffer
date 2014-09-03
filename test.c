@@ -51,7 +51,7 @@ test_buffer_append_n() {
   assert(0 == buffer_append_n(buf, "subway", 3));
   assert(0 == buffer_append_n(buf, "marines", 6));
   puts(buffer_string(buf));
-  assert(9 == buffer_length(buf));
+  assert(strlen("submarine") == buffer_length(buf));
   equal("submarine", buffer_string(buf)); 
 }
 
