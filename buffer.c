@@ -144,7 +144,7 @@ buffer_resize(buffer_t *self, size_t n) {
  */
 
 int
-buffer_append(buffer_t *self, char *str) {
+buffer_append(buffer_t *self, const char *str) {
   return buffer_append_n(self, str, strlen(str));
 }
 
@@ -153,7 +153,7 @@ buffer_append(buffer_t *self, char *str) {
  * return 0 on success, -1 on failure.
  */
 int
-buffer_append_n(buffer_t *self, char *str, size_t len) {
+buffer_append_n(buffer_t *self, const char *str, size_t len) {
   size_t prev = strlen(self->data);
   size_t needed = len + prev;
 

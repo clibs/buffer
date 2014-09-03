@@ -56,10 +56,10 @@ int
 buffer_prepend(buffer_t *self, char *str);
 
 int
-buffer_append(buffer_t *self, char *str);
+buffer_append(buffer_t *self, const char *str);
 
 int
-buffer_append_n(buffer_t *self, char *str, size_t len);
+buffer_append_n(buffer_t *self, const char *str, size_t len);
 
 int
 buffer_equals(buffer_t *self, buffer_t *other);
