@@ -5,4 +5,6 @@ before_install:
   - git clone https://github.com/clibs/clib.git /tmp/clib
   - sudo make -C /tmp/clib install
 install: clib install --dev
-script: make test
+script:
+  - make test
+  - valgrind --leak-check=full --error-exitcode=5 ./test > /dev/null
