@@ -5,8 +5,8 @@
 // Copyright (c) 2012 TJ Holowaychuk <tj@vision-media.ca>
 //
 
-#ifndef BUFFER
-#define BUFFER
+#ifndef BUFFER_H
+#define BUFFER_H 1
 
 #include <sys/types.h>
 
