@@ -27,6 +27,7 @@ test_buffer_new() {
   buffer_t *buf = buffer_new();
   assert(BUFFER_DEFAULT_SIZE == buffer_size(buf));
   assert(0 == buffer_length(buf));
+  buffer_free(buf);
 }
 
 void
@@ -34,6 +35,7 @@ test_buffer_new_with_size() {
   buffer_t *buf = buffer_new_with_size(1024);
   assert(1024 == buffer_size(buf));
   assert(0 == buffer_length(buf));
+  buffer_free(buf);
 }
 
 void
@@ -43,6 +45,7 @@ test_buffer_append() {
   assert(0 == buffer_append(buf, " World"));
   assert(strlen("Hello World") == buffer_length(buf));
   equal("Hello World", buffer_string(buf));
+  buffer_free(buf);
 }
 
 void
@@ -57,6 +60,7 @@ test_buffer_append__grow() {
   equal(str, buffer_string(buf));
   assert(1024 == buffer_size(buf));
   assert(strlen(str) == buffer_length(buf));
+  buffer_free(buf);
 }
 
 void
@@ -66,6 +70,7 @@ test_buffer_prepend() {
   assert(0 == buffer_prepend(buf, "Hello"));
   assert(strlen("Hello World") == buffer_length(buf));
   equal("Hello World", buffer_string(buf));
+  buffer_free(buf);
 }
 
 void
@@ -76,6 +81,9 @@ test_buffer_slice() {
   buffer_t *a = buffer_slice(buf, 2, 8);
   equal("Tobi Ferret", buffer_string(buf));
   equal("bi Fer", buffer_string(a));
+
+  buffer_free(buf);
+  buffer_free(a);
 }
 
 void
@@ -83,6 +91,7 @@ test_buffer_slice__range_error() {
   buffer_t *buf = buffer_new_with_copy("Tobi Ferret");
   buffer_t *a = buffer_slice(buf, 10, 2);
   assert(NULL == a);
+  buffer_free(buf);
 }
 
 void
@@ -98,6 +107,11 @@ test_buffer_slice__end() {
 
   buffer_t *c = buffer_slice(buf, 8, -1);
   equal("ret", buffer_string(c));
+
+  buffer_free(buf);
+  buffer_free(a);
+  buffer_free(b);
+  buffer_free(c);
 }
 
 void
@@ -106,6 +120,8 @@ test_buffer_slice__end_overflow() {
   buffer_t *a = buffer_slice(buf, 5, 1000);
   equal("Tobi Ferret", buffer_string(buf));
   equal("Ferret", buffer_string(a));
+  buffer_free(a);
+  buffer_free(buf);
 }
 
 void
@@ -117,6 +133,9 @@ test_buffer_equals() {
 
   buffer_append(b, " World");
   assert(0 == buffer_equals(a, b));
+
+  buffer_free(a);
+  buffer_free(b);
 }
 
 void
@@ -131,6 +150,8 @@ test_buffer_indexof() {
 
   i = buffer_indexof(buf, "something");
   assert(-1 == i);
+
+  buffer_free(buf);
 }
 
 void
@@ -140,6 +161,7 @@ test_buffer_fill() {
 
   buffer_fill(buf, 0);
   assert(0 == buffer_length(buf));
+  buffer_free(buf);
 }
 
 void
@@ -149,6 +171,7 @@ test_buffer_clear() {
 
   buffer_clear(buf);
   assert(0 == buffer_length(buf));
+  buffer_free(buf);
 }
 
 void
@@ -156,14 +179,17 @@ test_buffer_trim() {
   buffer_t *buf = buffer_new_with_copy("  Hello\n\n ");
   buffer_trim(buf);
   equal("Hello", buffer_string(buf));
+  buffer_free(buf);
 
   buf = buffer_new_with_copy("  Hello\n\n ");
   buffer_trim_left(buf);
   equal("Hello\n\n ", buffer_string(buf));
+  buffer_free(buf);
 
   buf = buffer_new_with_copy("  Hello\n\n ");
   buffer_trim_right(buf);
   equal("  Hello", buffer_string(buf));
+  buffer_free(buf);
 }
 
 void
@@ -178,6 +204,8 @@ test_buffer_compact() {
   assert(5 == buffer_length(buf));
   assert(5 == buffer_size(buf));
   equal("Hello", buffer_string(buf));
+
+  buffer_free(buf);
 }
 
 int
