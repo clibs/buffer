@@ -1,4 +1,12 @@
 
+0.2.1 / 2014-12-23
+==================
+
+  * fix header guard
+  * fix compilation on linux
+  * Add missing null terminator after realloc (buffer resize)
+  * Make it safe to always use `data` as a character string
+
 0.2.0 / 2013-01-05 
 ==================
 
