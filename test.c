@@ -50,9 +50,8 @@ test_buffer_append_n() {
   buffer_t *buf = buffer_new();
   assert(0 == buffer_append_n(buf, "subway", 3));
   assert(0 == buffer_append_n(buf, "marines", 6));
-  puts(buffer_string(buf));
   assert(strlen("submarine") == buffer_length(buf));
-  equal("submarine", buffer_string(buf)); 
+  equal("submarine", buffer_string(buf));
 }
 
 void
