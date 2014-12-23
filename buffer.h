@@ -8,6 +8,8 @@
 #ifndef BUFFER
 #define BUFFER
 
+#include <sys/types.h>
+
 /*
  * Default buffer size.
  */
