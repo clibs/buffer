@@ -1,4 +1,12 @@
 
+0.3.0 / 2014-12-24
+==================
+
+  * travis: Fail the build if any memory is leaked
+  * test: Fix memory leaks
+  * travis: setup
+  * Add `buffer_append_n(buffer_t *, const char *, size_t)`
+
 0.2.1 / 2014-12-23
 ==================
 

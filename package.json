@@ -1,6 +1,6 @@
 {
   "name": "buffer",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "repo": "clibs/buffer",
   "description": "Higher level C-string utilities",
   "keywords": ["buf", "buffer", "string", "str", "util", "utils"],
