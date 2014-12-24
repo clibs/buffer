@@ -49,6 +49,16 @@ test_buffer_append() {
 }
 
 void
+test_buffer_append_n() {
+  buffer_t *buf = buffer_new();
+  assert(0 == buffer_append_n(buf, "subway", 3));
+  assert(0 == buffer_append_n(buf, "marines", 6));
+  assert(strlen("submarine") == buffer_length(buf));
+  equal("submarine", buffer_string(buf));
+  buffer_free(buf);
+}
+
+void
 test_buffer_append__grow() {
   buffer_t *buf = buffer_new_with_size(10);
   assert(0 == buffer_append(buf, "Hello"));
@@ -214,6 +224,7 @@ main(){
   test_buffer_new_with_size();
   test_buffer_append();
   test_buffer_append__grow();
+  test_buffer_append_n();
   test_buffer_prepend();
   test_buffer_slice();
   test_buffer_slice__range_error();

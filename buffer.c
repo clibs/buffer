@@ -144,21 +144,29 @@ buffer_resize(buffer_t *self, size_t n) {
  */
 
 int
-buffer_append(buffer_t *self, char *str) {
-  size_t len = strlen(str);
+buffer_append(buffer_t *self, const char *str) {
+  return buffer_append_n(self, str, strlen(str));
+}
+
+/*
+ * Append the first `len` bytes from `str` to `self` and
+ * return 0 on success, -1 on failure.
+ */
+int
+buffer_append_n(buffer_t *self, const char *str, size_t len) {
   size_t prev = strlen(self->data);
   size_t needed = len + prev;
 
   // enough space
   if (self->len > needed) {
-    strcat(self->data, str);
+    strncat(self->data, str, len);
     return 0;
   }
 
   // resize
   int ret = buffer_resize(self, needed);
   if (-1 == ret) return -1;
-  strcat(self->data, str);
+  strncat(self->data, str, len);
 
   return 0;
 }
