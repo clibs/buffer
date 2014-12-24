@@ -52,6 +52,7 @@ test_buffer_append_n() {
   assert(0 == buffer_append_n(buf, "marines", 6));
   assert(strlen("submarine") == buffer_length(buf));
   equal("submarine", buffer_string(buf));
+  buffer_free(buf);
 }
 
 void
