@@ -148,6 +148,16 @@ test_buffer_equals() {
   buffer_free(b);
 }
 
+void test_buffer_formatting() {
+  buffer_t *buf = buffer_new();
+  int result = buffer_appendf(buf, "%d %s", 3, "cow");
+  assert(0 == result);
+  result = buffer_prependf(buf, "0x%08X - ", 0xdeadbeef);
+  assert(0 == result);
+  equal("0xDEADBEEF - 3 cow", buffer_string(buf));
+  buffer_free(buf);
+}
+
 void
 test_buffer_indexof() {
   buffer_t *buf = buffer_new_with_copy("Tobi is a ferret");
@@ -231,6 +241,7 @@ main(){
   test_buffer_slice__end();
   test_buffer_slice__end_overflow();
   test_buffer_equals();
+  test_buffer_formatting();
   test_buffer_indexof();
   test_buffer_fill();
   test_buffer_clear();

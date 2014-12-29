@@ -6,6 +6,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <sys/types.h>
@@ -138,6 +139,50 @@ buffer_resize(buffer_t *self, size_t n) {
   self->alloc[n] = '\0';
   return 0;
 }
+
+/*
+ * Append or prepend a formatted string to the buffer.
+ */
+static int buffer_format_helper(buffer_t *self, const char* format, va_list ap,
+    int front) {
+  char *formatted;
+  int result, bytes_formatted;
+  bytes_formatted = vasprintf(&formatted, format, ap);
+  if (bytes_formatted < 0) {
+    return -1;
+  }
+
+  if (front) {
+    result = buffer_prepend(self, formatted);
+  } else {
+    result = buffer_append(self, formatted);
+  }
+  free(formatted);
+  return result;
+}
+
+/*
+ * Append a printf-style formatted string to the buffer.
+ */
+int buffer_appendf(buffer_t *self, const char *format, ...) {
+  va_list ap;
+  va_start(ap, format);
+  const int ret = buffer_format_helper(self, format, ap, 0);
+  va_end(ap);
+  return ret;
+}
+
+/*
+ * Prepend a printf-style formatted string to the buffer.
+ */
+int buffer_prependf(buffer_t *self, const char *format, ...) {
+  va_list ap;
+  va_start(ap, format);
+  const int ret = buffer_format_helper(self, format, ap, 1);
+  va_end(ap);
+  return ret;
+}
+
 
 /*
  * Append `str` to `self` and return 0 on success, -1 on failure.
