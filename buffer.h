@@ -58,7 +58,13 @@ int
 buffer_prepend(buffer_t *self, char *str);
 
 int
+buffer_prependf(buffer_t *self, const char *format, ...);
+
+int
 buffer_append(buffer_t *self, const char *str);
+
+int
+buffer_appendf(buffer_t *self, const char *format, ...);
 
 int
 buffer_append_n(buffer_t *self, const char *str, size_t len);
