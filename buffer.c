@@ -145,8 +145,43 @@ buffer_resize(buffer_t *self, size_t n) {
  */
 static int buffer_format_helper(buffer_t *self, const char* format, va_list ap,
     int front) {
-  char *formatted;
-  int result, bytes_formatted;
+
+  const int initial_len = buffer_len(self);
+  /*
+   * First, we compute how many bytes are needed for the formatted string
+   * and allocate that much more space in the buffer.
+   */
+  {
+    va_list tmpa;
+    va_copy(tmpa, ap);
+    const int space_required = vsnprintf(NULL, 0, format, tmpa);
+    va_end(tmpa);
+    const int resized = buffer_resize(self, initial_len + space_required);
+    if (resized == -1) {
+      return -1;
+    }
+  }
+
+  // At this point `self` points to a buffer with enough space reserved to
+  // allow us to fit the formatted string on the end.
+
+  // `dst` will point to the location where we want to write the formatted bytes.
+  char* dst;
+
+  if (front) {
+    // If we want to prepend that formatted string onto the front of the buffer
+    // then we need to move the current buffer contents to the right
+    memmove(self->data + initial_len, self->data, initial_len);
+    dst = self->data;
+  } else {
+    // If we are going to append the data, then we point `dst` to the end of the
+    // current buffer.
+    dst = self->data + initial_len;
+  }
+
+  // TODO: prepend will clober the first character. Need to copy it.
+
+
   bytes_formatted = vasprintf(&formatted, format, ap);
   if (bytes_formatted < 0) {
     return -1;
@@ -155,6 +190,9 @@ static int buffer_format_helper(buffer_t *self, const char* format, va_list ap,
   if (front) {
     result = buffer_prepend(self, formatted);
   } else {
+    if (res == -1) {
+      return -1;
+    }
     result = buffer_append(self, formatted);
   }
   free(formatted);
