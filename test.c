@@ -149,9 +149,17 @@ test_buffer_equals() {
 }
 
 void test_buffer_formatting() {
-  buffer_t *buf = buffer_new();
+
+  buffer_t *buf = buffer_new_with_copy("123");
+  buffer_prependf(buf, "abcde");
+  equal("abcde123", buffer_string(buf));
+  buffer_free(buf);
+
+  //buffer_t *
+    buf = buffer_new();
   int result = buffer_appendf(buf, "%d %s", 3, "cow");
   assert(0 == result);
+  equal("3 cow", buffer_string(buf));
   result = buffer_prependf(buf, "0x%08X - ", 0xdeadbeef);
   assert(0 == result);
   equal("0xDEADBEEF - 3 cow", buffer_string(buf));
