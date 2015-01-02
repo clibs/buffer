@@ -140,75 +140,34 @@ buffer_resize(buffer_t *self, size_t n) {
   return 0;
 }
 
-int buffer_appendfv(buffer_t *self, const char* format, va_list ap) {
-  printf("Appending '%s' to '%s'\n", format, self->data);
-  const int initial_len = buffer_length(self);
-  /*
-   * First, we compute how many bytes are needed for the formatted string
-   * and allocate that much more space in the buffer.
-   */
-  va_list tmpa;
-  va_copy(tmpa, ap);
-  const int space_required = vsnprintf(NULL, 0, format, tmpa);
-  va_end(tmpa);
-  const int resized = buffer_resize(self, initial_len + space_required);
-  if (resized == -1) {
-    return -1;
-  }
-
-  char* dst = self->data + initial_len;
-  const int bytes_formatted = vsnprintf(dst, 1+space_required, format, ap);
-
-  printf("Result '%s'\n", self->data);
-  return (bytes_formatted < 0) ? -1 : 0;
-}
-
-
 /*
  * Append a printf-style formatted string to the buffer.
  */
 int buffer_appendf(buffer_t *self, const char *format, ...) {
   va_list ap;
   va_start(ap, format);
-  int result = buffer_appendfv(self, format, ap);
-  va_end(ap);
-  return result;
-}
+  const int initial_len = buffer_length(self);
 
-static inline void buf_swap(buffer_t *self, int a, int b) {
-  const char tmp = self->data[a];
-  self->data[a] = self->data[b];
-  self->data[b] = tmp;
-}
-
-static inline void buf_rotate(buffer_t *self, int n) {
-  int length = buffer_length(self);
-  printf("init: %d final: %d\n", n, length);
-  for (int i=0; i<length; i++) {
-    int next = (i + n) % length;
-    buf_swap(self, i, next);
-  }
-}
-
-/*
- * Prepend a printf-style formatted string to the buffer.
- */
-int buffer_prependf(buffer_t *self, const char *format, ...) {
-  const int initial_length = buffer_length(self);
-  va_list ap;
-  va_start(ap, format);
-  int result = buffer_appendfv(self, format, ap);
-  va_end(ap);
-
-  // a b c d e 1 2 3
-  // 1 2 3 a b c d e
-  if (result != -1) {
-    buf_rotate(self, initial_length);
+  // First, we compute how many bytes are needed for the formatted string
+  // and allocate that much more space in the buffer.
+  va_list tmpa;
+  va_copy(tmpa, ap);
+  const int space_required = vsnprintf(NULL, 0, format, tmpa);
+  va_end(tmpa);
+  const int resized = buffer_resize(self, initial_len + space_required);
+  if (resized == -1) {
+    va_end(ap);
+    return -1;
   }
 
-  return result;
-}
+  // Next format the string into the space that we have made room for.
+  char* dst = self->data + initial_len;
+  const int bytes_formatted = vsnprintf(dst, 1+space_required, format, ap);
 
+  printf("Result '%s'\n", self->data);
+  va_end(ap);
+  return (bytes_formatted < 0) ? -1 : 0;
+}
 
 /*
  * Append `str` to `self` and return 0 on success, -1 on failure.
