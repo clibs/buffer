@@ -164,7 +164,6 @@ int buffer_appendf(buffer_t *self, const char *format, ...) {
   char* dst = self->data + initial_len;
   const int bytes_formatted = vsnprintf(dst, 1+space_required, format, ap);
 
-  printf("Result '%s'\n", self->data);
   va_end(ap);
   return (bytes_formatted < 0) ? -1 : 0;
 }
