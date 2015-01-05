@@ -6,6 +6,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <sys/types.h>
@@ -137,6 +138,35 @@ buffer_resize(buffer_t *self, size_t n) {
   if (!self->alloc) return -1;
   self->alloc[n] = '\0';
   return 0;
+}
+
+/*
+ * Append a printf-style formatted string to the buffer.
+ */
+int buffer_appendf(buffer_t *self, const char *format, ...) {
+  va_list ap;
+  va_start(ap, format);
+  const int initial_len = buffer_length(self);
+
+  // First, we compute how many bytes are needed for the formatted string
+  // and allocate that much more space in the buffer.
+  va_list tmpa;
+  va_copy(tmpa, ap);
+  const int space_required = vsnprintf(NULL, 0, format, tmpa);
+  va_end(tmpa);
+  const int resized = buffer_resize(self, initial_len + space_required);
+  if (resized == -1) {
+    va_end(ap);
+    return -1;
+  }
+
+  // Next format the string into the space that we have made room for.
+  char* dst = self->data + initial_len;
+  const int bytes_formatted = vsnprintf(dst, 1+space_required, format, ap);
+
+  printf("Result '%s'\n", self->data);
+  va_end(ap);
+  return (bytes_formatted < 0) ? -1 : 0;
 }
 
 /*
