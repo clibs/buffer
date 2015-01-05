@@ -1,4 +1,11 @@
 
+0.4.0 / 2015-01-05
+==================
+
+  * refactor
+  * buffer: Remove printf() statement
+  * Add `buffer_appendf()` (#10, marcomorain)
+
 0.3.0 / 2014-12-24
 ==================
 
