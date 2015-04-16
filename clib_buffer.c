@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <sys/types.h>
-#include "buffer.h"
+#include "clib_buffer.h"
 
 // TODO: shared with reference counting
 // TODO: linked list for append/prepend etc
