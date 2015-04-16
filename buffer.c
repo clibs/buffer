@@ -23,21 +23,21 @@
   (((b) + ((a) - 1)) & ~((a) - 1))
 
 /*
- * Allocate a new buffer with BUFFER_DEFAULT_SIZE.
+ * Allocate a new buffer with CLIB_BUFFER_DEFAULT_SIZE.
  */
 
-buffer_t *
-buffer_new() {
-  return buffer_new_with_size(BUFFER_DEFAULT_SIZE);
+clib_buffer_t *
+clib_buffer_new() {
+  return clib_buffer_new_with_size(CLIB_BUFFER_DEFAULT_SIZE);
 }
 
 /*
  * Allocate a new buffer with `n` bytes.
  */
 
-buffer_t *
-buffer_new_with_size(size_t n) {
-  buffer_t *self = malloc(sizeof(buffer_t));
+clib_buffer_t *
+clib_buffer_new_with_size(size_t n) {
+  clib_buffer_t *self = malloc(sizeof(clib_buffer_t));
   if (!self) return NULL;
   self->len = n;
   self->data = self->alloc = calloc(n + 1, 1);
@@ -48,18 +48,18 @@ buffer_new_with_size(size_t n) {
  * Allocate a new buffer with `str`.
  */
 
-buffer_t *
-buffer_new_with_string(char *str) {
-  return buffer_new_with_string_length(str, strlen(str));
+clib_buffer_t *
+clib_buffer_new_with_string(char *str) {
+  return clib_buffer_new_with_string_length(str, strlen(str));
 }
 
 /*
  * Allocate a new buffer with `str` and `len`.
  */
 
-buffer_t *
-buffer_new_with_string_length(char *str, size_t len) {
-  buffer_t *self = malloc(sizeof(buffer_t));
+clib_buffer_t *
+clib_buffer_new_with_string_length(char *str, size_t len) {
+  clib_buffer_t *self = malloc(sizeof(clib_buffer_t));
   if (!self) return NULL;
   self->len = len;
   self->data = self->alloc = str;
@@ -70,10 +70,10 @@ buffer_new_with_string_length(char *str, size_t len) {
  * Allocate a new buffer with a copy of `str`.
  */
 
-buffer_t *
-buffer_new_with_copy(char *str) {
+clib_buffer_t *
+clib_buffer_new_with_copy(char *str) {
   size_t len = strlen(str);
-  buffer_t *self = buffer_new_with_size(len);
+  clib_buffer_t *self = clib_buffer_new_with_size(len);
   if (!self) return NULL;
   memcpy(self->alloc, str, len);
   self->data = self->alloc;
@@ -86,8 +86,8 @@ buffer_new_with_copy(char *str) {
  */
 
 ssize_t
-buffer_compact(buffer_t *self) {
-  size_t len = buffer_length(self);
+clib_buffer_compact(clib_buffer_t *self) {
+  size_t len = clib_buffer_length(self);
   size_t rem = self->len - len;
   char *buf = calloc(len + 1, 1);
   if (!buf) return -1;
@@ -103,7 +103,7 @@ buffer_compact(buffer_t *self) {
  */
 
 void
-buffer_free(buffer_t *self) {
+clib_buffer_free(clib_buffer_t *self) {
   free(self->alloc);
   free(self);
 }
@@ -113,7 +113,7 @@ buffer_free(buffer_t *self) {
  */
 
 size_t
-buffer_size(buffer_t *self) {
+clib_buffer_size(clib_buffer_t *self) {
   return self->len;
 }
 
@@ -122,7 +122,7 @@ buffer_size(buffer_t *self) {
  */
 
 size_t
-buffer_length(buffer_t *self) {
+clib_buffer_length(clib_buffer_t *self) {
   return strlen(self->data);
 }
 
@@ -131,7 +131,7 @@ buffer_length(buffer_t *self) {
  */
 
 int
-buffer_resize(buffer_t *self, size_t n) {
+clib_buffer_resize(clib_buffer_t *self, size_t n) {
   n = nearest_multiple_of(1024, n);
   self->len = n;
   self->alloc = self->data = realloc(self->alloc, n + 1);
@@ -144,7 +144,7 @@ buffer_resize(buffer_t *self, size_t n) {
  * Append a printf-style formatted string to the buffer.
  */
 
-int buffer_appendf(buffer_t *self, const char *format, ...) {
+int clib_buffer_appendf(clib_buffer_t *self, const char *format, ...) {
   va_list ap;
   va_list tmpa;
   char *dst = NULL;
@@ -154,7 +154,7 @@ int buffer_appendf(buffer_t *self, const char *format, ...) {
 
   va_start(ap, format);
 
-  length = buffer_length(self);
+  length = clib_buffer_length(self);
 
   // First, we compute how many bytes are needed
   // for the formatted string and allocate that
@@ -162,7 +162,7 @@ int buffer_appendf(buffer_t *self, const char *format, ...) {
   va_copy(tmpa, ap);
   required = vsnprintf(NULL, 0, format, tmpa);
   va_end(tmpa);
-  if (-1 == buffer_resize(self, length + required)) {
+  if (-1 == clib_buffer_resize(self, length + required)) {
     va_end(ap);
     return -1;
   }
@@ -183,8 +183,8 @@ int buffer_appendf(buffer_t *self, const char *format, ...) {
  */
 
 int
-buffer_append(buffer_t *self, const char *str) {
-  return buffer_append_n(self, str, strlen(str));
+clib_buffer_append(clib_buffer_t *self, const char *str) {
+  return clib_buffer_append_n(self, str, strlen(str));
 }
 
 /*
@@ -192,7 +192,7 @@ buffer_append(buffer_t *self, const char *str) {
  * return 0 on success, -1 on failure.
  */
 int
-buffer_append_n(buffer_t *self, const char *str, size_t len) {
+clib_buffer_append_n(clib_buffer_t *self, const char *str, size_t len) {
   size_t prev = strlen(self->data);
   size_t needed = len + prev;
 
@@ -203,7 +203,7 @@ buffer_append_n(buffer_t *self, const char *str, size_t len) {
   }
 
   // resize
-  int ret = buffer_resize(self, needed);
+  int ret = clib_buffer_resize(self, needed);
   if (-1 == ret) return -1;
   strncat(self->data, str, len);
 
@@ -215,7 +215,7 @@ buffer_append_n(buffer_t *self, const char *str, size_t len) {
  */
 
 int
-buffer_prepend(buffer_t *self, char *str) {
+clib_buffer_prepend(clib_buffer_t *self, char *str) {
   size_t len = strlen(str);
   size_t prev = strlen(self->data);
   size_t needed = len + prev;
@@ -224,7 +224,7 @@ buffer_prepend(buffer_t *self, char *str) {
   if (self->len > needed) goto move;
 
   // resize
-  int ret = buffer_resize(self, needed);
+  int ret = clib_buffer_resize(self, needed);
   if (-1 == ret) return -1;
 
   // move
@@ -240,8 +240,8 @@ buffer_prepend(buffer_t *self, char *str) {
  * or NULL on error.
  */
 
-buffer_t *
-buffer_slice(buffer_t *buf, size_t from, ssize_t to) {
+clib_buffer_t *
+clib_buffer_slice(clib_buffer_t *buf, size_t from, ssize_t to) {
   size_t len = strlen(buf->data);
 
   // bad range
@@ -254,7 +254,7 @@ buffer_slice(buffer_t *buf, size_t from, ssize_t to) {
   if (to > len) to = len;
 
   size_t n = to - from;
-  buffer_t *self = buffer_new_with_size(n);
+  clib_buffer_t *self = clib_buffer_new_with_size(n);
   memcpy(self->data, buf->data + from, n);
   return self;
 }
@@ -264,7 +264,7 @@ buffer_slice(buffer_t *buf, size_t from, ssize_t to) {
  */
 
 int
-buffer_equals(buffer_t *self, buffer_t *other) {
+clib_buffer_equals(clib_buffer_t *self, clib_buffer_t *other) {
   return 0 == strcmp(self->data, other->data);
 }
 
@@ -273,7 +273,7 @@ buffer_equals(buffer_t *self, buffer_t *other) {
  */
 
 ssize_t
-buffer_indexof(buffer_t *self, char *str) {
+clib_buffer_indexof(clib_buffer_t *self, char *str) {
   char *sub = strstr(self->data, str);
   if (!sub) return -1;
   return sub - self->data;
@@ -284,7 +284,7 @@ buffer_indexof(buffer_t *self, char *str) {
  */
 
 void
-buffer_trim_left(buffer_t *self) {
+clib_buffer_trim_left(clib_buffer_t *self) {
   int c;
   while ((c = *self->data) && isspace(c)) {
     ++self->data;
@@ -296,9 +296,9 @@ buffer_trim_left(buffer_t *self) {
  */
 
 void
-buffer_trim_right(buffer_t *self) {
+clib_buffer_trim_right(clib_buffer_t *self) {
   int c;
-  size_t i = buffer_length(self) - 1;
+  size_t i = clib_buffer_length(self) - 1;
   while ((c = self->data[i]) && isspace(c)) {
     self->data[i--] = 0;
   }
@@ -309,9 +309,9 @@ buffer_trim_right(buffer_t *self) {
  */
 
 void
-buffer_trim(buffer_t *self) {
-  buffer_trim_left(self);
-  buffer_trim_right(self);
+clib_buffer_trim(clib_buffer_t *self) {
+  clib_buffer_trim_left(self);
+  clib_buffer_trim_right(self);
 }
 
 /*
@@ -319,7 +319,7 @@ buffer_trim(buffer_t *self) {
  */
 
 void
-buffer_fill(buffer_t *self, int c) {
+clib_buffer_fill(clib_buffer_t *self, int c) {
   memset(self->data, c, self->len);
 }
 
@@ -328,8 +328,8 @@ buffer_fill(buffer_t *self, int c) {
  */
 
 void
-buffer_clear(buffer_t *self) {
-  buffer_fill(self, 0);
+clib_buffer_clear(clib_buffer_t *self) {
+  clib_buffer_fill(self, 0);
 }
 
 /*
@@ -337,7 +337,7 @@ buffer_clear(buffer_t *self) {
  */
 
 void
-buffer_print(buffer_t *self) {
+clib_buffer_print(clib_buffer_t *self) {
   size_t len = self->len;
   int i;
   printf("\n ");
