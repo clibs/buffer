@@ -5,5 +5,5 @@
   "description": "Higher level C-string utilities",
   "keywords": ["buf", "buffer", "string", "str", "util", "utils"],
   "license": "MIT",
-  "src": ["buffer.c", "buffer.h"]
+  "src": ["clib_buffer.c", "clib_buffer.h"]
 }
