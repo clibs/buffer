@@ -1,19 +1,35 @@
 
-# buffer
+//
+// buffer.h
+//
+// Copyright (c) 2012 TJ Holowaychuk <tj@vision-media.ca>
+//
 
-  Tiny C string manipulation library.
+#ifndef CLIB_BUFFER_H
+#define CLIB_BUFFER_H 1
 
-## Installation
+#include <sys/types.h>
 
-  Install with [clib](https://github.com/clibs/clib):
+/*
+ * Default buffer size.
+ */
 
-```
-$ clib install clibs/buffer
-```
+#ifndef CLIB_BUFFER_DEFAULT_SIZE
+#define CLIB_BUFFER_DEFAULT_SIZE 64
+#endif
 
-## API
+/*
+ * Buffer struct.
+ */
 
-```c
+typedef struct {
+  size_t len;
+  char *alloc;
+  char *data;
+} clib_buffer_t;
+
+// prototypes
+
 clib_buffer_t *
 clib_buffer_new();
 
@@ -42,7 +58,13 @@ int
 clib_buffer_prepend(clib_buffer_t *self, char *str);
 
 int
-clib_buffer_append(clib_buffer_t *self, char *str);
+clib_buffer_append(clib_buffer_t *self, const char *str);
+
+int
+clib_buffer_appendf(clib_buffer_t *self, const char *format, ...);
+
+int
+clib_buffer_append_n(clib_buffer_t *self, const char *str, size_t len);
 
 int
 clib_buffer_equals(clib_buffer_t *self, clib_buffer_t *other);
@@ -75,8 +97,5 @@ void
 clib_buffer_print(clib_buffer_t *self);
 
 #define clib_buffer_string(self) (self->data)
-```
 
-## License
-
-  MIT
+#endif
