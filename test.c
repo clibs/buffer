@@ -229,6 +229,16 @@ test_buffer_compact() {
   buffer_free(buf);
 }
 
+void
+test_buffer_prepend_issue_15() {
+  buffer_t *file = buffer_new();
+  assert(0 == buffer_append(file, "layout.bk.html"));
+  assert(0 == buffer_prepend(file, "./example/"));
+  assert(strlen("./example/layout.bk.html") == buffer_length(file));
+  equal("./example/layout.bk.html", buffer_string(file));
+  buffer_free(file);
+}
+
 int
 main(){
   test_buffer_new();
@@ -248,6 +258,7 @@ main(){
   test_buffer_clear();
   test_buffer_trim();
   test_buffer_compact();
+  test_buffer_prepend_issue_15();
   printf("\n  \e[32m\u2713 \e[90mok\e[0m\n\n");
   return 0;
 }
