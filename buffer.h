@@ -60,6 +60,9 @@ buffer_prepend(buffer_t *self, char *str);
 int
 buffer_append(buffer_t *self, const char *str);
 
+#ifdef __GNUC__
+__attribute__((format(printf, 2, 3)))
+#endif
 int
 buffer_appendf(buffer_t *self, const char *format, ...);
 
