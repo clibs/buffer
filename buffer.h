@@ -96,6 +96,12 @@ buffer_trim(buffer_t *self);
 void
 buffer_print(buffer_t *self);
 
+int
+buffer_ends_w(buffer_t *self, const char *ends);
+
+int
+buffer_bgns_w(buffer_t *self, const char *bgns);
+
 #define buffer_string(self) (self->data)
 
 #endif

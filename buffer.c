@@ -351,3 +351,27 @@ buffer_print(buffer_t *self) {
 
   printf("\n");
 }
+
+/*
+ * Checks if the buffer's end is same than `ends`.
+ */
+
+int
+buffer_ends_w(buffer_t *self, const char *ends) {
+  size_t endslen = strlen(ends);
+  if (endslen > self->len) return -1;
+
+  int advance = self->len - endslen;
+  return (0 == strncmp(self->data + advance, ends, endslen)) ? 1 : -1;
+}
+
+/*
+ * Checks if the beginning of the buffer is same than `bgns`.
+ */
+
+int
+buffer_bgns_w(buffer_t *self, const char *bgns) {
+  const size_t bgnslen = strlen(bgns);
+  if (bgnslen > self->len) return -1;
+  return (0 == strncmp(self->data, bgns, bgnslen)) ? 1 : -1;
+}
