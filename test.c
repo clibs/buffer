@@ -1,4 +1,3 @@
-
 //
 // test.c
 //
@@ -239,8 +238,29 @@ test_buffer_prepend_issue_15() {
   buffer_free(file);
 }
 
+void
+test_ends_w() {
+  buffer_t *buf = buffer_new_with_copy("Good C string library btw.");
+  assert(0 == buffer_ends_w(buf, "anyway."));
+  assert(1 == buffer_ends_w(buf, ""));
+  assert(0 == buffer_ends_w(buf, "This text is longer than what is on the buffer."));
+  assert(1 == buffer_ends_w(buf, "Good C string library btw."));
+  assert(1 == buffer_ends_w(buf, "btw."));
+  buffer_free(buf);
+}
+
+void
+test_begins_w() {
+  buffer_t *buf = buffer_new_with_copy("The quick brown fox jumps over the lazy dog.");
+  assert(0 == buffer_begins_w(buf, "The Quick"));
+  assert(0 == buffer_begins_w(buf, ""));
+  assert(1 == buffer_begins_w(buf, "The quick brown"));
+  assert(0 == buffer_begins_w(buf, "A longer text than the text saved into the buffer, this is not the beginnig of the buffer."));
+  buffer_free(buf);
+}
+
 int
-main(){
+main() {
   test_buffer_new();
   test_buffer_new_with_size();
   test_buffer_append();
@@ -259,6 +279,8 @@ main(){
   test_buffer_trim();
   test_buffer_compact();
   test_buffer_prepend_issue_15();
+  test_ends_w();
+  test_begins_w();
   printf("\n  \e[32m\u2713 \e[90mok\e[0m\n\n");
   return 0;
 }

@@ -9,6 +9,7 @@
 #define BUFFER_H 1
 
 #include <sys/types.h>
+#include <stdbool.h>
 
 /*
  * Default buffer size.
@@ -95,6 +96,12 @@ buffer_trim(buffer_t *self);
 
 void
 buffer_print(buffer_t *self);
+
+bool
+buffer_ends_w(buffer_t *self, const char *ends);
+
+bool
+buffer_begins_w(buffer_t *self, const char *bgns);
 
 #define buffer_string(self) (self->data)
 
