@@ -359,10 +359,11 @@ buffer_print(buffer_t *self) {
 bool
 buffer_ends_w(buffer_t *self, const char *ends) {
   size_t endslen = strlen(ends);
-  if (endslen > self->len) return -1;
-
   int advance = self->len - endslen;
-  return 0 == strncmp(self->data + advance, ends, endslen);
+  
+  if (!*ends)
+    return 1;
+  return (endslen <= self->len) && (0 == strncmp(self->data + advance, ends, endslen));
 }
 
 /*
@@ -372,6 +373,7 @@ buffer_ends_w(buffer_t *self, const char *ends) {
 bool
 buffer_begins_w(buffer_t *self, const char *bgns) {
   const size_t bgnslen = strlen(bgns);
-  if (bgnslen > self->len) return -1;
-  return 0 == strncmp(self->data, bgns, bgnslen);
+  
+  if (!*bgns) return 0 == self->len;
+  return bgnslen <= self->len && 0 == strncmp(self->data, bgns, bgnslen);
 }
