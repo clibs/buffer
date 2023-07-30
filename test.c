@@ -243,16 +243,16 @@ test_ends_w() {
   buffer_t *buf = buffer_new_with_copy("Good C string library btw.");
   assert(1 == buffer_ends_w(buf, "btw."));
   assert(1 == buffer_ends_w(buf, "C string library btw."));
-  assert(-1 == buffer_ends_w(buf, "anyway."));
+  assert(0 == buffer_ends_w(buf, "anyway."));
   buffer_free(buf);
 }
 
 void
-test_bgns_w() {
+test_begins_w() {
   buffer_t *buf = buffer_new_with_copy("The quick brown fox jumps over the lazy dog.");
-  assert(1 == buffer_bgns_w(buf, "The quick"));
-  assert(1 == buffer_bgns_w(buf, "The"));
-  assert(-1 == buffer_bgns_w(buf, "The slow balck dog"));
+  assert(1 == buffer_begins_w(buf, "The quick"));
+  assert(1 == buffer_begins_w(buf, "The"));
+  assert(0 == buffer_begins_w(buf, "The slow balck dog"));
   buffer_free(buf);
 }
 
@@ -277,7 +277,7 @@ main(){
   test_buffer_compact();
   test_buffer_prepend_issue_15();
   test_ends_w();
-  test_bgns_w();
+  test_begins_w();
   printf("\n  \e[32m\u2713 \e[90mok\e[0m\n\n");
   return 0;
 }
